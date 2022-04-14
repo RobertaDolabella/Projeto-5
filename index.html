@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="index.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="principal">
+        <div class="topo">
+            <img src="/imagens/logo 1.jpg" alt="" width="75px" height="53px">
+            <button onclick="sideBar()"><ion-icon class="icon" name="people"></ion-icon></button>
+        </div>
+        <div class="container-mensagem">
+            <input type="text" placeholder="Escreva aqui..." required>
+            <button><ion-icon class="icon" name="paper-plane-outline" size="200"></ion-icon></button>
+        </div>
+        <div class="corpo">
+            <ul>
+
+            </ul>
+        </div>
+    </div>
+    <div class="side-bar escondido">
+            <h3 class="titulo-side">Escolha um contato <br> para enviar mensagem:</h3>
+            <div class="itens">
+                <ion-icon class="icon" name="people-outline"></ion-icon><h5>Todos</h5>
+            </div>
+        <ul>
+
+        </ul>
+        <h5 class="visibilidade">Escolha a visibilidade:</h5>
+        <div class="itens">
+            <ion-icon name="lock-open"></ion-icon><h5>Público</h5>
+        </div>
+        <div class="itens">
+            <ion-icon name="lock-closed"></ion-icon><h5>Reservadamente</h5>
+        </div>
+        
+
+        <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+        <script src="java.js"></script>
+    </div>
+</body>
+</html>
