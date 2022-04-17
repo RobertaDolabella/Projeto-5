@@ -6,25 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="index.css">
-    <title>Document</title>
+    <title>Bate-papo Uol</title>
 </head>
 <body>
-    <div class="principal">
+    <div class="conitainer">
+    <div class="login"> 
+        <img src="/imagens/logo 1.jpg" width="130px" height="92px" alt="">
+        <input type="text" placeholder="Digite seu nome">
+        <button class="botao-login" onclick="comecar()">Entrar</button>
+    </div>
+    <div class="principal off">
         <div class="topo">
             <img src="/imagens/logo 1.jpg" alt="" width="75px" height="53px">
             <button onclick="sideBar()"><ion-icon class="icon" name="people"></ion-icon></button>
-        </div>
-        <div class="container-mensagem">
-            <input type="text" placeholder="Escreva aqui..." required>
-            <button><ion-icon class="icon" name="paper-plane-outline" size="200"></ion-icon></button>
         </div>
         <div class="corpo">
             <ul>
 
             </ul>
         </div>
-    </div>
-    <div class="side-bar escondido">
+        <div class="container-mensagem">
+            <input type="text" placeholder="Escreva aqui..." required>
+            <button><ion-icon class="icon" name="paper-plane-outline" size="200"></ion-icon></button>
+        </div>
+    <div class="side-bar off">
             <h3 class="titulo-side">Escolha um contato <br> para enviar mensagem:</h3>
             <div class="itens">
                 <ion-icon class="icon" name="people-outline"></ion-icon><h5>Todos</h5>
@@ -39,10 +44,11 @@
         <div class="itens">
             <ion-icon name="lock-closed"></ion-icon><h5>Reservadamente</h5>
         </div>
-        
-
-        <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
-        <script src="java.js"></script>
     </div>
+</div>
+</div>
+        <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="java.js"></script>
 </body>
 </html>
