@@ -1,15 +1,14 @@
 let nameLogin;
-let visibilidadeMensagem;
-let textoMensagem;
-let estado;
 let promiseNome;
 let chamada = [{ name: "" }]
 let intervalo;
 let listaChat;
 let tamanhoChat;
 let i;
-let cortedaLista=""
+let cortedaLista = ""
 let corpo;
+let remetente;
+let nomeRemetente;
 function telaMensagem() {
     document.querySelector(".login").classList.add("off")
     document.querySelector(".login").querySelector("img").classList.add("off")
@@ -21,31 +20,19 @@ function telaMensagem() {
 }
 function timerMensagem() {
     console.log("chamou o timer")
-    let timerAtualizar = setInterval(getMensagens, 20000)
-}
-function ultimaMensagem() {
-    i = 0
-    while (i < tamanhoChat) {
-        if (cortedaLista == "") {
-            return i = 0
-        }
-        if (listaChat[i] !== cortedaLista) {
-            i++
-        }
-        if (cortedaLista == listaChat[i])
-            return i
-    }
+    let timerAtualizar = setInterval(getMensagens, 2000)
 }
 function minhasMensagens() {
     console.log("entrou nas MinhasMensagens")
-    ultimaMensagem()
+    i = 0
     let novaMensagem;
     while (i < tamanhoChat) {
+        cortedaLista = listaChat[i]
         if (listaChat[i].to == "todos" || listaChat[i].to == "Todos" || listaChat[i].from == `${nameLogin}`) {
             novaMensagem = [
                 `<li>
                     <div class="texto ${listaChat[i].type}">
-                        <b>(${listaChat[i].time})   ${listaChat[i].from}</b> para <b>${listaChat[i].to}</b>: ${listaChat[i].text}
+                        <span class="light">(${listaChat[i].time}) </span><span> <b>${listaChat[i].from}</b> para <b> ${listaChat[i].to}</b>: ${listaChat[i].text}</span>
                     </div>
                 </li>
                 `
@@ -56,7 +43,7 @@ function minhasMensagens() {
         }
         i++
     }
-    cortedaLista = listaChat[i]
+
 }
 function atualizarMensagem(chat) {
     console.log("sucesso na promiseMensagem")
@@ -64,23 +51,44 @@ function atualizarMensagem(chat) {
     tamanhoChat = listaChat.length
     corpo = document.querySelector("ul")
     minhasMensagens()
-    }
-function erroMensagem(falha){
+}
+function erroMensagem(falha) {
     let statusCode = falha.response.erro
     Offline()
-    retornarTelaInicial() 
+    retornarTelaInicial()
 }
 function getMensagens() {
     console.log("entrou no getMensagens")
     promiseMensagem = axios.get("https://mock-api.driven.com.br/api/v6/uol/messages")
     promiseMensagem.then(atualizarMensagem)
     promiseMensagem.catch(erroMensagem)
-    }
+}
 function sideBar() {
     document.querySelector(".side-bar").classList.remove("off")
     document.querySelector(".principal").classList.add("principal-back")
+    usuarios()
 }
-function comecar() {
+function usuarios() {
+    listaUsuario = document.querySelector(".usuarios")
+    console.log("entrou em usuarios")
+    let m = 0
+    let novosUsuarios;
+    console.log(chamada)
+    console.log(chamada.length)
+    while (m < chamada.length) {
+        novosUsuarios = [
+            `<li>
+                        <div class="itens" onclick="remetente(this)">
+                            ${chamada[m].name}
+                        </div>
+                    </li>
+                    `
+        ]
+        listaUsuario.innerHTML += novosUsuarios
+        m++
+    }
+}
+function comecar(){
     promiseNome = axios.get("https://mock-api.driven.com.br/api/v6/uol/participants")
     promiseNome.then(listaNome)
     console.log("continuou")
@@ -124,13 +132,13 @@ function online() {
     }
     function caiu(erro) {
         clearInterval(intervalo)
-        let statusCode = erro.response.status
+        let statusCode = erro.response.erro
         alert(statusCode)
         retornarTelaInicial()
     }
 }
 
-function enviar(){
+function enviar() {
     let textoMensagem = document.querySelector(".mensagem").value
     let estado = "message"
     let visibilidadeMensagem = "todos"
@@ -154,9 +162,10 @@ function enviar(){
         alert(statusCode)
     }
 }
-function Offline(){
+
+function Offline() {
     clearInterval(intervalo)
 }
-function retornarTelaInicial(){
+function retornarTelaInicial() {
     window.location.reload()
 }
