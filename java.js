@@ -8,6 +8,8 @@ let i;
 let cortedaLista = ""
 let corpo;
 let nomeRemetente;
+let visibilidade;
+let elementoAnterior;
 function telaMensagem() {
     document.querySelector(".login").classList.add("off")
     document.querySelector(".login").querySelector("img").classList.add("off")
@@ -18,11 +20,9 @@ function telaMensagem() {
     timerMensagem()
 }
 function timerMensagem() {
-    console.log("chamou o timer")
-    let timerAtualizar = setInterval(getMensagens, 2000)
+    let timerAtualizar = setInterval(getMensagens, 3000)
 }
 function minhasMensagens() {
-    console.log("entrou nas MinhasMensagens")
     i = 0
     let novaMensagem;
     while (i < tamanhoChat) {
@@ -45,7 +45,6 @@ function minhasMensagens() {
 
 }
 function atualizarMensagem(chat) {
-    console.log("sucesso na promiseMensagem")
     listaChat = chat.data
     tamanhoChat = listaChat.length
     corpo = document.querySelector("ul")
@@ -57,7 +56,6 @@ function erroMensagem(falha) {
     retornarTelaInicial()
 }
 function getMensagens() {
-    console.log("entrou no getMensagens")
     promiseMensagem = axios.get("https://mock-api.driven.com.br/api/v6/uol/messages")
     promiseMensagem.then(atualizarMensagem)
     promiseMensagem.catch(erroMensagem)
@@ -75,18 +73,14 @@ function voltaParaTelaMensagem(){
 }
 function usuarios() {
     listaUsuario = document.querySelector(".usuarios")
-    console.log("entrou em usuarios")
     let m = 0
     let novosUsuarios;
-    console.log(chamada)
-    console.log(chamada.length)
     while (m < chamada.length) {
         novosUsuarios = [
             `<li>
                         <div class="itens nomes">
                             <ion-icon name="person-circle"></ion-icon>
                             <span class="remetente" onclick="remetente(this)">${chamada[m].name}</span>
-                            <ion-icon class="checkmark" name="checkmark"></ion-icon>
                         </div>
                     </li>
                     `
@@ -96,22 +90,23 @@ function usuarios() {
     }
 }
 function remetente(elemento){
-    let divpai = elemento.parentNode
-    divpai.querySelector(".checkmark").classList.add("aparece")
+    if(nomeRemetente!== undefined){
+        let icon = elementoAnterior.querySelector(".checkmark")
+        icon.classList.add("offIcon")
+        icon.classList.remove("onIcon")
+    }
+    elementoAnterior = elemento
     nomeRemetente = elemento.innerHTML
-    console.log(nomeRemetente)
-    alert("remetente selecionado")
+    elemento.innerHTML += "<ion-icon class='checkmark onIcon' name='checkmark'></ion-icon>"
 }
 function comecar(){
     promiseNome = axios.get("https://mock-api.driven.com.br/api/v6/uol/participants")
     promiseNome.then(listaNome)
-    console.log("continuou")
 }
 function listaNome(resposta) {
     nameLogin = document.querySelector("input").value
     let nomeUsuario = { "name": `${nameLogin}` }
     chamada = resposta.data
-    console.log(chamada)
     promiseRegistrar = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants", nomeUsuario)
     promiseRegistrar.then(nomePostado)
     promiseRegistrar.catch(erroPostado)
@@ -124,7 +119,6 @@ function nomePostado() {
 function erroPostado(falha) {
     let statusCode = falha.response.status
     alert(`erro do tipo ${statusCode}`)
-    console.log(`erro do tipo ${statusCode}`)
     if (statusCode == 400) {
         alert("Usuário já existente, escolha outro nome para o seu usuário")
         document.querySelector("input").value = ""
@@ -132,17 +126,14 @@ function erroPostado(falha) {
 }
 function timerOnline() {
     intervalo = setInterval(online, 4999)
-    console.log("entrou no timer")
 }
 function online() {
-    console.log("chamou a funcao online")
     nameLogin = document.querySelector("input").value
     let nomeUsuario = { "name": `${nameLogin}` }
     promiseOnline = axios.post("https://mock-api.driven.com.br/api/v6/uol/status", nomeUsuario)
     promiseOnline.then(verificacao)
     promiseOnline.catch(caiu)
     function verificacao(usuario) {
-        console.log("tudo certo")
     }
     function caiu(erro) {
         clearInterval(intervalo)
@@ -156,22 +147,22 @@ function enviar() {
     let textoMensagem = document.querySelector(".mensagem").value
     let estado = "message"
     let visibilidadeMensagem = "todos"
-    if(nomeRemetente!== undefined){
-        visibilidadeMensagem = nomeRemetente
+    if(visibilidade !== undefined){
+        if(visibilidade !== "Público"){
+            visibilidadeMensagem = nomeRemetente
+            estado = "private_message"
+        }  
     }
-    console.log("definiu menagens")
     let mensagemTexto = {
         from: `${nameLogin}`,
         to: `${visibilidadeMensagem}`,
         text: `${textoMensagem}`,
         type: `${estado}`
     }
-    console.log(mensagemTexto)
     promiseEnviar = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", mensagemTexto)
     promiseEnviar.then(statusOnline)
     promiseEnviar.catch(erroStatus)
     function statusOnline(sucesso) {
-        console.log("mensagem enviada")
         document.querySelector(".mensagem").value = ""
     }
     function erroStatus(erro) {
@@ -185,4 +176,17 @@ function Offline() {
 }
 function retornarTelaInicial() {
     window.location.reload()
+}
+function selecionada(elemento){
+    let desselecionar = document.querySelector(".selecionada")
+    if(desselecionar !== null){
+        desselecionar.classList.remove("selecionada")
+        let icon = desselecionar.querySelector(".onIcon")
+        icon.classList.add("offIcon")
+        icon.classList.remove("onIcon")
+    }
+    elemento.classList.add("selecionada")
+    elemento.querySelector(".checkmark").classList.remove("offIcon")
+    elemento.querySelector(".checkmark").classList.add("onIcon")
+    visibilidade = elemento.querySelector("h5").innerHTML
 }

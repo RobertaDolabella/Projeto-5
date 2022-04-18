@@ -34,7 +34,7 @@
                     <ion-icon class="icon" name="paper-plane-outline" size="200"></ion-icon>
                 </button>
             </div>
-            <div class="out off" onclick="voltaParaTelaMensagem">
+            <div class="out off" onclick="voltaParaTelaMensagem()">
 
             </div>
             <div class="side-bar off">
@@ -49,13 +49,13 @@
                     </ul>
                 </div>
                 <h5 class="visibilidade">Escolha a visibilidade:</h5>
-                <div class="itens">
+                <div class="itens publico" onclick="selecionada(this)">
                     <ion-icon name="lock-open"></ion-icon>
-                    <h5>Público</h5>
+                    <h5>Público</h5><ion-icon class='checkmark onIcon' name='checkmark'></ion-icon>
                 </div>
-                <div class="itens">
+                <div class="itens reservadamente" onclick="selecionada(this)">
                     <ion-icon name="lock-closed"></ion-icon>
-                    <h5>Reservadamente</h5>
+                    <h5>Reservadamente</h5><ion-icon class='checkmark offIcon' name='checkmark'></ion-icon>
                 </div>
             </div>
         </div>
