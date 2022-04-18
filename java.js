@@ -7,7 +7,6 @@ let tamanhoChat;
 let i;
 let cortedaLista = ""
 let corpo;
-let remetente;
 let nomeRemetente;
 function telaMensagem() {
     document.querySelector(".login").classList.add("off")
@@ -65,8 +64,14 @@ function getMensagens() {
 }
 function sideBar() {
     document.querySelector(".side-bar").classList.remove("off")
+    document.querySelector(".out").classList.remove("off")
     document.querySelector(".principal").classList.add("principal-back")
     usuarios()
+}
+function voltaParaTelaMensagem(){
+    document.querySelector(".side-bar").classList.add("off")
+    document.querySelector(".out").classList.add("off")
+    document.querySelector(".principal").classList.remove("principal-back")
 }
 function usuarios() {
     listaUsuario = document.querySelector(".usuarios")
@@ -78,8 +83,10 @@ function usuarios() {
     while (m < chamada.length) {
         novosUsuarios = [
             `<li>
-                        <div class="itens" onclick="remetente(this)">
-                            ${chamada[m].name}
+                        <div class="itens nomes">
+                            <ion-icon name="person-circle"></ion-icon>
+                            <span class="remetente" onclick="remetente(this)">${chamada[m].name}</span>
+                            <ion-icon class="checkmark" name="checkmark"></ion-icon>
                         </div>
                     </li>
                     `
@@ -87,6 +94,13 @@ function usuarios() {
         listaUsuario.innerHTML += novosUsuarios
         m++
     }
+}
+function remetente(elemento){
+    let divpai = elemento.parentNode
+    divpai.querySelector(".checkmark").classList.add("aparece")
+    nomeRemetente = elemento.innerHTML
+    console.log(nomeRemetente)
+    alert("remetente selecionado")
 }
 function comecar(){
     promiseNome = axios.get("https://mock-api.driven.com.br/api/v6/uol/participants")
@@ -142,6 +156,9 @@ function enviar() {
     let textoMensagem = document.querySelector(".mensagem").value
     let estado = "message"
     let visibilidadeMensagem = "todos"
+    if(nomeRemetente!== undefined){
+        visibilidadeMensagem = nomeRemetente
+    }
     console.log("definiu menagens")
     let mensagemTexto = {
         from: `${nameLogin}`,
