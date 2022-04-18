@@ -2,7 +2,6 @@ let nameLogin;
 let visibilidadeMensagem;
 let textoMensagem;
 let estado;
-let nomeUsuario;
 let promiseNome;
 let chamada = [{ name: "" }]
 let intervalo;
@@ -40,23 +39,24 @@ function ultimaMensagem() {
 function minhasMensagens() {
     console.log("entrou nas MinhasMensagens")
     ultimaMensagem()
+    let novaMensagem;
     while (i < tamanhoChat) {
         if (listaChat[i].to == "todos" || listaChat[i].to == "Todos" || listaChat[i].from == `${nameLogin}`) {
-            corpo.innerHTML += [
+            novaMensagem = [
                 `<li>
-                    <div class="texto" `${lista[i].type}`>
+                    <div class="texto ${listaChat[i].type}">
                         <b>(${listaChat[i].time})   ${listaChat[i].from}</b> para <b>${listaChat[i].to}</b>: ${listaChat[i].text}
                     </div>
                 </li>
                 `
             ]
+            corpo.innerHTML += novaMensagem
+            let ultimaMensagem = document.querySelector("ul").lastElementChild
+            ultimaMensagem.scrollIntoView()
         }
         i++
     }
-    console.log(listaChat[i])
     cortedaLista = listaChat[i]
-    console.log(cortedaLista)
-    corpo.scrollIntoView()
 }
 function atualizarMensagem(chat) {
     console.log("sucesso na promiseMensagem")
@@ -65,6 +65,11 @@ function atualizarMensagem(chat) {
     corpo = document.querySelector("ul")
     minhasMensagens()
     }
+function erroMensagem(falha){
+    let statusCode = falha.response.erro
+    Offline()
+    retornarTelaInicial() 
+}
 function getMensagens() {
     console.log("entrou no getMensagens")
     promiseMensagem = axios.get("https://mock-api.driven.com.br/api/v6/uol/messages")
@@ -81,8 +86,8 @@ function comecar() {
     console.log("continuou")
 }
 function listaNome(resposta) {
-    nomeUsuario = { "name": `${nameLogin}` }
     nameLogin = document.querySelector("input").value
+    let nomeUsuario = { "name": `${nameLogin}` }
     chamada = resposta.data
     console.log(chamada)
     promiseRegistrar = axios.post("https://mock-api.driven.com.br/api/v6/uol/participants", nomeUsuario)
@@ -91,7 +96,8 @@ function listaNome(resposta) {
 }
 function nomePostado() {
     timerOnline()
-    entrounaSala()
+    telaMensagem()
+    timerMensagem()
 }
 function erroPostado(falha) {
     let statusCode = falha.response.status
@@ -108,53 +114,49 @@ function timerOnline() {
 }
 function online() {
     console.log("chamou a funcao online")
+    nameLogin = document.querySelector("input").value
+    let nomeUsuario = { "name": `${nameLogin}` }
     promiseOnline = axios.post("https://mock-api.driven.com.br/api/v6/uol/status", nomeUsuario)
     promiseOnline.then(verificacao)
     promiseOnline.catch(caiu)
     function verificacao(usuario) {
         console.log("tudo certo")
-        estado = "entrou na sala..."
     }
     function caiu(erro) {
         clearInterval(intervalo)
         let statusCode = erro.response.status
         alert(statusCode)
+        retornarTelaInicial()
     }
 }
 
-function entrounaSala() {
-    console.log("entrounaSala executando")
-    visibilidadeMensagem = "todos"
-    textoMensagem = "entrou na sala"
-    estado = "status"
+function enviar(){
+    let textoMensagem = document.querySelector(".mensagem").value
+    let estado = "message"
+    let visibilidadeMensagem = "todos"
     console.log("definiu menagens")
-    let mensagemStatus = {
+    let mensagemTexto = {
         from: `${nameLogin}`,
         to: `${visibilidadeMensagem}`,
         text: `${textoMensagem}`,
         type: `${estado}`
     }
-    console.log(mensagemStatus)
-    promiseEntrou = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", mensagemStatus)
-    promiseEntrou.then(statusOnline)
-    promiseEntrou.catch(erroStatus)
+    console.log(mensagemTexto)
+    promiseEnviar = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", mensagemTexto)
+    promiseEnviar.then(statusOnline)
+    promiseEnviar.catch(erroStatus)
     function statusOnline(sucesso) {
         console.log("mensagem enviada")
-        telaMensagem()
-        timerMensagem()
+        document.querySelector(".mensagem").value = ""
     }
     function erroStatus(erro) {
         statusCode = erro.response.status
         alert(statusCode)
     }
 }
-function erroMensagem(falha) {
-    statusCode = falha.response.status
-    console.log(statusCode)
+function Offline(){
+    clearInterval(intervalo)
 }
-
-function enviar(){
-    textoMensagem = document.querySelector(".mensagem").value
-    estado = "message"
-    promiseEnviar = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages",mensagem)
+function retornarTelaInicial(){
+    window.location.reload()
 }
