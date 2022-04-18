@@ -11,12 +11,6 @@ let tamanhoChat;
 let i;
 let cortedaLista=""
 let corpo;
-let mensagem = {
-    from: `${nameLogin}`,
-    to: `${visibilidadeMensagem}`,
-    text: `${textoMensagem}`,
-    type: `${estado}`
-}
 function telaMensagem() {
     document.querySelector(".login").classList.add("off")
     document.querySelector(".login").querySelector("img").classList.add("off")
@@ -50,7 +44,7 @@ function minhasMensagens() {
         if (listaChat[i].to == "todos" || listaChat[i].to == "Todos" || listaChat[i].from == `${nameLogin}`) {
             corpo.innerHTML += [
                 `<li>
-                    <div class="texto">
+                    <div class="texto" `${lista[i].type}`>
                         <b>(${listaChat[i].time})   ${listaChat[i].from}</b> para <b>${listaChat[i].to}</b>: ${listaChat[i].text}
                     </div>
                 </li>
@@ -134,8 +128,14 @@ function entrounaSala() {
     textoMensagem = "entrou na sala"
     estado = "status"
     console.log("definiu menagens")
-    console.log(mensagem)
-    promiseEntrou = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", mensagem)
+    let mensagemStatus = {
+        from: `${nameLogin}`,
+        to: `${visibilidadeMensagem}`,
+        text: `${textoMensagem}`,
+        type: `${estado}`
+    }
+    console.log(mensagemStatus)
+    promiseEntrou = axios.post("https://mock-api.driven.com.br/api/v6/uol/messages", mensagemStatus)
     promiseEntrou.then(statusOnline)
     promiseEntrou.catch(erroStatus)
     function statusOnline(sucesso) {

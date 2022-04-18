@@ -59,6 +59,9 @@ button {
     height: 40px;
     margin: 0 1px;
 }
+.status{
+    background-color: #DCDCDC;
+}
 
 .container-mensagem {
     position: fixed;
